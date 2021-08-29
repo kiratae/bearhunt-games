@@ -34,7 +34,7 @@ connection.onmessage = async function(message) {
 </script>
 
 <template>
-  <small class="text-white px-2">
+  <small class="text-gray-700 dark:text-gray-200 px-2">
     Server time: {{ app.serverTime }}
   </small>
   <router-view />
