@@ -19,11 +19,16 @@ connection.onopen = function(event) {
 }
 
 connection.onmessage = async function(message) {
-  if (message.data) {
-    const data = await app.decodeWebsocketMessage(message.data)
+  try {
+    if (message.data) {
+      const data = await app.decodeWebsocketMessage(message.data)
 
-    if (data.serverTime)
-      app.setServerTime(data.serverTime)
+      if (data.serverTime)
+        app.setServerTime(data.serverTime)
+    }
+  }
+  catch (error) {
+    app.setServerTime('Error')
   }
 }
 </script>

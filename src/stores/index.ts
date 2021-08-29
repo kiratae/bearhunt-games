@@ -19,8 +19,13 @@ export const appStore = defineStore('app', () => {
   }
 
   async function decodeWebsocketMessage(data: Blob) {
-    const buffer = Buffer.from(await data.arrayBuffer())
-    return JSON.parse(buffer.toString('utf8'))
+    try {
+      const buffer = Buffer.from(await data.arrayBuffer())
+      return JSON.parse(buffer.toString('utf8'))
+    }
+    catch (error) {
+      return null
+    }
   }
 
   return {
