@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { WebsocketBuilder } from 'websocket-ts'
 import { useHead } from '@vueuse/head'
 import { appStore } from '~/stores/index'
 // https://github.com/vueuse/head
@@ -13,20 +12,20 @@ useHead({
 })
 
 const app = appStore()
-new WebsocketBuilder('ws://bearhunt-games-api.herokuapp.com')
-  .onOpen((i, ev) => {
-    app.setServerTime('Connected!')
-    i.send(JSON.stringify({ msg: 'hello world' }))
-  })
-  // .onClose((i, ev) => { console.log('closed') })
-  .onError((i, ev) => { app.setServerTime('Can\'t connect to server!') })
-  .onMessage(async(i, ev) => {
-    const data = JSON.parse(await ev.data.text())
+const connection = new WebSocket('ws://bearhunt-games-api.herokuapp.com')
+connection.onopen = function(event) {
+  app.setServerTime('Connected!')
+  connection.send(app.encodeWebsocketMessage({ msg: 'Hi server!' }))
+}
+
+connection.onmessage = async function(message) {
+  if (message.data) {
+    const data = await app.decodeWebsocketMessage(message.data)
+
     if (data.serverTime)
       app.setServerTime(data.serverTime)
-  })
-  // .onRetry((i, ev) => { console.log('retry') })
-  .build()
+  }
+}
 </script>
 
 <template>
