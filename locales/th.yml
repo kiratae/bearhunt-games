@@ -1,0 +1,15 @@
+button:
+  about: เกี่ยวกับเรา
+  back: กลับ
+  go: ไป
+  home: หน้าแรก
+  toggle_dark: สลับโหมดมืด
+  toggle_langs: เปลี่ยนภาษา
+intro:
+  desc: บอร์ดเกมแบบออนไลน์ สำหรับทุกคน!
+  hi: สวัสดี, {name}!
+  whats-your-name: คุณชื่ออะไร?
+server:
+  connected: เชื่อมต่อแล้ว!
+  server-time: "เวลาระบบ: {time}"
+not-found: ไม่พบหน้า

@@ -6,8 +6,9 @@ const name = ref(user.savedName)
 
 const router = useRouter()
 const go = () => {
+  user.setNewName(name)
   if (name.value)
-    router.push(`/hi/${encodeURIComponent(name.value)}`)
+    router.push('/room')
 }
 
 const { t } = useI18n()
@@ -15,11 +16,11 @@ const { t } = useI18n()
 
 <template>
   <div>
-    <p class="text-4xl">
-      <carbon-campsite class="inline-block" />
+    <p class="text-5xl">
+      <emojione-monotone-bear-face class="inline-block" />
     </p>
     <p>
-      <a rel="noreferrer" href="https://github.com/antfu/vitesse" target="_blank">Vitesse</a>
+      <a rel="noreferrer" href="https://bearhunt-games.netlify.app" target="_blank">Bearhunt Games</a>
     </p>
     <p>
       <em class="text-sm opacity-75">{{ t('intro.desc') }}</em>

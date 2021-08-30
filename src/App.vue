@@ -7,10 +7,11 @@ import { appStore } from '~/stores/index'
 useHead({
   title: 'Bearhunt Games',
   meta: [
-    { name: 'description', content: 'Opinionated Vite Starter Template' },
+    { name: 'description', content: 'Free online board game for everyone!' },
   ],
 })
 
+const { t } = useI18n()
 const app = appStore()
 const connection = new WebSocket('wss://bearhunt-games-api.herokuapp.com')
 connection.onopen = function(event) {
@@ -34,8 +35,8 @@ connection.onmessage = async function(message) {
 </script>
 
 <template>
-  <small class="text-gray-700 dark:text-gray-200 px-2">
-    Server time: {{ app.serverTime }}
-  </small>
+  <p class="text-gray-700 dark:text-gray-200 px-1 opacity-75 text-sm">
+    {{ t('server.server-time', { time: app.serverTime }) }}
+  </p>
   <router-view />
 </template>
