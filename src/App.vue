@@ -13,8 +13,8 @@ useHead({
 
 const { t } = useI18n()
 const app = useAppStore()
-// const connection = new WebSocket('wss://bearhunt-games-api.herokuapp.com')
-const connection = new WebSocket('ws://localhost:3000')
+const connection = new WebSocket('wss://bearhunt-games-api.herokuapp.com')
+// const connection = new WebSocket('ws://localhost:3000')
 connection.onopen = function(event) {
   app.setServerTime('Connected!')
   connection.send(app.encodeWebsocketMessage({ msg: 'Hi server!' }))

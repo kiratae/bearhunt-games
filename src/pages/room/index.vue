@@ -16,10 +16,10 @@ const games = [
 ]
 
 const createRoom = async(gameId: string) => {
-  const data = await axios.post('localhost:3000/rooms', {
-    gameId,
-  })
-  console.log(data)
+  // const data = await axios.post('localhost:3000/rooms', {
+  //   gameId,
+  // })
+  // console.log(data)
   router.push('/room/123')
 }
 const back = () => {
