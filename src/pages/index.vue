@@ -14,7 +14,7 @@ if (sessionStorage.getItem('user')) {
 }
 
 const go = async() => {
-  await axios.post('http://localhost:3000/users', {
+  await axios.post('https://bearhunt-games-api.herokuapp.com/users', {
     name: name.value,
   }).then((res) => {
     const data = res.data
