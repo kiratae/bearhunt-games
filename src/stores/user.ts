@@ -4,8 +4,17 @@ export const useUserStore = defineStore('user', () => {
   /**
    * Current named of the user.
    */
-  const savedName = ref('')
-  const previousNames = ref(new Set<string>())
+  class User {
+    id: string
+    name: string
+
+    constructor(id: string, name: string) {
+      this.id = id
+      this.name = name
+    }
+  }
+
+  const savedUser = ref<User>()
 
   /**
    * Changes the current name of the user and saves the one that was used
@@ -13,16 +22,13 @@ export const useUserStore = defineStore('user', () => {
    *
    * @param name - new name to set
    */
-  function setNewName(name: string) {
-    if (savedName.value)
-      previousNames.value.add(savedName.value)
-
-    savedName.value = name
+  function setUser(id: string, name: string) {
+    savedUser.value = new User(id, name)
   }
 
   return {
-    setNewName,
-    savedName,
+    savedUser,
+    setUser,
   }
 })
 

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { isDark, toggleDark } from '~/logic'
-
-import { appStore } from '~/stores/index'
+import { useAppStore } from '~/stores/index'
 
 const { t, availableLocales, locale } = useI18n()
 
-const app = appStore()
+const app = useAppStore()
 
 const toggleLocales = () => {
   // change to some real logic
@@ -39,4 +38,7 @@ const toggleLocales = () => {
       <carbon-logo-github />
     </a>
   </nav>
+  <p class="text-sm my-2 text-gray-700 dark:text-gray-200 px-1 opacity-75">
+    {{ t('server.server-time', { time: app.serverTime }) }}
+  </p>
 </template>

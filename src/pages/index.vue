@@ -1,14 +1,27 @@
 <script setup lang="ts">
+import axios from 'axios'
 import { useUserStore } from '~/stores/user'
 
-const user = useUserStore()
-const name = ref(user.savedName)
-
 const router = useRouter()
-const go = () => {
-  user.setNewName(name)
-  if (name.value)
+const user = useUserStore()
+const name = ref(user.savedUser?.name)
+
+// Get user from sessionStorage if exist
+if (sessionStorage.getItem('user')) {
+  const userData = JSON.parse(sessionStorage.getItem('user'))
+  user.setUser(userData.id, userData.name)
+  router.push('/room')
+}
+
+const go = async() => {
+  await axios.post('http://localhost:3000/users', {
+    name: name.value,
+  }).then((res) => {
+    const data = res.data
+    sessionStorage.setItem('user', JSON.stringify(data))
+    user.setUser(data.id, data.name)
     router.push('/room')
+  })
 }
 
 const { t } = useI18n()

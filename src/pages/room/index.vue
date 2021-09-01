@@ -1,32 +1,30 @@
 <script setup lang="ts">
+import axios from 'axios'
 import { useUserStore } from '~/stores/user'
 
 const router = useRouter()
 const user = useUserStore()
 const { t } = useI18n()
 
-const name = ref(user.savedName)
+const name = ref(user.savedUser?.name)
 
 if (!name.value)
   router.push('/')
 
 const games = [
-  { name: 'Dixit' },
-  { name: 'Dixit 2' },
-  { name: 'Dixit 2' },
-  { name: 'Dixit 2' },
-  { name: 'Dixit 2' },
-  { name: 'Dixit 2' },
-  { name: 'Dixit 2' },
-  { name: 'Dixit 2' },
-  { name: 'Dixit 2' },
-  { name: 'Dixit 2' },
-  { name: 'Dixit 2' },
-  { name: 'Dixit 2' },
+  { id: 'dixit', name: 'Dixit', detail: 'Dixit detail!', isCreating: false },
 ]
 
-const createRoom = () => {
-
+const createRoom = async(gameId: string) => {
+  const data = await axios.post('localhost:3000/rooms', {
+    gameId,
+  })
+  console.log(data)
+  router.push('/room/123')
+}
+const back = () => {
+  sessionStorage.removeItem('user')
+  router.back()
 }
 
 </script>
@@ -38,7 +36,7 @@ const createRoom = () => {
     </p>
     <p>{{ t('intro.hi', { name: name }) }}</p>
 
-    <div v-if="games.length" class="my-3 w-3/4 mx-auto grid grid-cols-4">
+    <div v-if="games.length" class="my-3 w-4/6 sm:w-4/5 lg:w-3/4 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       <div v-for="(game, index) in games" :key="index" class="box col-auto">
         <div class="text-center space-y-2">
           <div class="space-y-0.5">
@@ -46,18 +44,21 @@ const createRoom = () => {
               {{ game.name }}
             </p>
             <p class="text-gray-500 dark:text-gray-300 font-medium pb-3">
-              {{ game.name }}
+              {{ game.detail }}
             </p>
           </div>
-          <button class="icon-btn create-room-btn text-center" @click="createRoom()">
-            <cil-room class="inline align-text-bottom mr-1" /><span>Create Room</span>
-          </button>
+          <!-- Create room -->
+          <div class="inline">
+            <button class="icon-btn create-room-btn text-center" @click="createRoom(game.id)">
+              <cil-room class="inline align-text-bottom mr-1" /><span>Create Room</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
     <div>
-      <button class="btn m-3 text-sm mt-6" @click="router.back()">
+      <button class="btn m-3 text-sm mt-6" @click="back()">
         {{ t('button.back') }}
       </button>
     </div>

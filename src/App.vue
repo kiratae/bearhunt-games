@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-import { appStore } from '~/stores/index'
+import { useAppStore } from '~/stores/index'
 // https://github.com/vueuse/head
 // you can use this to manipulate the document head in any components,
 // they will be rendered correctly in the html results with vite-ssg
@@ -12,8 +12,9 @@ useHead({
 })
 
 const { t } = useI18n()
-const app = appStore()
-const connection = new WebSocket('wss://bearhunt-games-api.herokuapp.com')
+const app = useAppStore()
+// const connection = new WebSocket('wss://bearhunt-games-api.herokuapp.com')
+const connection = new WebSocket('ws://localhost:3000')
 connection.onopen = function(event) {
   app.setServerTime('Connected!')
   connection.send(app.encodeWebsocketMessage({ msg: 'Hi server!' }))
@@ -35,8 +36,5 @@ connection.onmessage = async function(message) {
 </script>
 
 <template>
-  <p class="text-gray-700 dark:text-gray-200 px-1 opacity-75 text-sm">
-    {{ t('server.server-time', { time: app.serverTime }) }}
-  </p>
   <router-view />
 </template>
