@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { useUserStore } from '~/stores/user'
+import { User, useUserStore } from '~/stores/user'
+import { useApiStore } from '~/stores/api'
 
 const router = useRouter()
 const user = useUserStore()
+const api = useApiStore()
 const { t } = useI18n()
 
-const name = ref(user.savedUser?.name)
+const savedUser = ref<User>(user.getUser())
 
-if (!name.value)
+if (!savedUser)
   router.push('/')
 
 const games = [
@@ -16,11 +18,13 @@ const games = [
 ]
 
 const createRoom = async(gameId: string) => {
-  // const data = await axios.post('localhost:3000/rooms', {
-  //   gameId,
-  // })
-  // console.log(data)
-  router.push('/room/123')
+  await api.getInstance().post('/rooms', {
+    gameId,
+    userId: savedUser.value.id,
+  }).then((res) => {
+    const data = res.data
+    router.push(`/room/${data.id}`)
+  })
 }
 const back = () => {
   sessionStorage.removeItem('user')
@@ -34,7 +38,7 @@ const back = () => {
     <p class="text-5xl">
       <fluent-person-20-regular class="inline-block" />
     </p>
-    <p>{{ t('intro.hi', { name: name }) }}</p>
+    <p>{{ t('intro.hi', { name: savedUser?.name }) }}</p>
 
     <div v-if="games.length" class="my-3 w-4/6 sm:w-4/5 lg:w-3/4 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       <div v-for="(game, index) in games" :key="index" class="box col-auto">
@@ -49,7 +53,7 @@ const back = () => {
           </div>
           <!-- Create room -->
           <div class="inline">
-            <button class="icon-btn create-room-btn text-center" @click="createRoom(game.id)">
+            <button class="icon-btn create-room-btn text-center" :disabled="savedUser == null" @click="createRoom(game.id)">
               <cil-room class="inline align-text-bottom mr-1" /><span>Create Room</span>
             </button>
           </div>

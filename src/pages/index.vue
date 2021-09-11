@@ -1,27 +1,34 @@
 <script setup lang="ts">
-import axios from 'axios'
+import { useAppStore } from '~/stores'
+import { useApiStore } from '~/stores/api'
 import { useUserStore } from '~/stores/user'
 
 const router = useRouter()
+const app = useAppStore()
 const user = useUserStore()
+const api = useApiStore()
 const name = ref(user.savedUser?.name)
-
-// Get user from sessionStorage if exist
-if (sessionStorage.getItem('user')) {
-  const userData = JSON.parse(sessionStorage.getItem('user'))
-  user.setUser(userData.id, userData.name)
-  router.push('/room')
-}
+let isLoading = false
 
 const go = async() => {
-  await axios.post('https://bearhunt-games-api.herokuapp.com/users', {
+  isLoading = true
+  api.setLoading(isLoading)
+  await api.getInstance().post('/users', {
     name: name.value,
   }).then((res) => {
     const data = res.data
     sessionStorage.setItem('user', JSON.stringify(data))
     user.setUser(data.id, data.name)
-    router.push('/room')
+    if (app.returnUrl != '') {
+      router.push(app.returnUrl)
+      app.setReturnUrl('')
+    }
+    else {
+      router.push('/room')
+    }
   })
+  isLoading = false
+  api.setLoading(isLoading)
 }
 
 const { t } = useI18n()
@@ -59,7 +66,7 @@ const { t } = useI18n()
     <label class="hidden" for="input">{{ t('intro.whats-your-name') }}</label>
 
     <div>
-      <button class="m-3 text-sm btn" :disabled="!name" @click="go">
+      <button class="m-3 text-sm btn" :disabled="!name || isLoading" @click="go">
         {{ t('button.go') }}
       </button>
     </div>

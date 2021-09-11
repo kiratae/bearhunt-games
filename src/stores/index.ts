@@ -11,6 +11,7 @@ export const useAppStore = defineStore('app', () => {
   const serverTime = ref('...')
   const dayjsLocale = ref('en')
   const enc = new TextEncoder()
+  const returnUrl = ref('')
 
   function setServerTime(time: string) {
     appTime.value = time
@@ -40,12 +41,18 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
+  function setReturnUrl(url: string) {
+    returnUrl.value = url
+  }
+
   return {
     setServerTime,
     serverTime,
     encodeWebsocketMessage,
     decodeWebsocketMessage,
     setDayjsLocale,
+    returnUrl,
+    setReturnUrl,
   }
 })
 
